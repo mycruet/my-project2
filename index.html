@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物联数智化赋能平台</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1890ff;
+            --secondary-color: #13c2c2;
+            --bg-color: #f0f2f5;
+            --text-color: #333;
+            --border-color: #d9d9d9;
+            --header-height: 60px;
+            --sidebar-width: 200px;
+            --drawer-width: 400px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+        .p-2 { padding: 0.5rem; }
+        .p-4 { padding: 1rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .text-center { text-align: center; }
+        .cursor-pointer { cursor: pointer; }
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover { background: #40a9ff; border-color: #40a9ff; }
+        .btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+        
+        input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        input:focus { border-color: var(--primary-color); }
+
+        /* 1. Login Page Styles */
+        #login-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 360px;
+            max-width: 90%;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 24px;
+            color: #333;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 16px;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .login-form input {
+            width: 100%;
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* 2. Workspace Layout */
+        #workspace-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: #fff;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--primary-color);
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 2px;
+            background: #f5f5f5;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .nav-item {
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(0,0,0,0.05);
+            color: #333;
+        }
+
+        .nav-item.active {
+            background: #fff;
+            color: var(--primary-color);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-weight: 500;
+        }
+
+        .header-right {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #faad14;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .user-avatar:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            width: 150px;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f5f5f5;
+            color: var(--primary-color);
+        }
+
+        /* Main Content Area */
+        .main-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #fff;
+            border-right: 1px solid #e8e8e8;
+            padding: 10px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: #e6f7ff;
+            color: var(--primary-color);
+        }
+
+        .sidebar-item.active {
+            background: #e6f7ff;
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            background: #fff;
+            margin: 10px;
+            border-radius: 4px;
+            padding: 20px;
+            overflow-y: auto;
+            border: 1px solid #e8e8e8;
+        }
+
+        .content-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 16px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* 3. Drawer (Account Panel) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: var(--drawer-width);
+            height: 100%;
+            background: #fff;
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+        }
+
+        .drawer-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .drawer-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Account Info Blocks */
+        .info-block {
+            margin-bottom: 24px;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .info-header {
+            background: #fafafa;
+            padding: 10px 16px;
+            border-bottom: 1px solid #e8e8e8;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-body {
+            padding: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            width: 100px;
+            color: #888;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex: 1;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .form-row {
+            margin-bottom: 16px;
+        }
+        .form-row label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+        .form-row input {
+            width: 100%;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .password-form {
+            border-top: 1px dashed #e8e8e8;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #52c41a;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.3s;
+            font-size: 14px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title { display: none; }
+            .top-nav { display: none; } /* Simplify for mobile */
+            .sidebar { width: 60px; }
+            .sidebar-item span { display: none; }
+            .sidebar-item { text-align: center; padding: 15px 0; }
+            .drawer { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">操作成功</div>
+
+    <!-- 1. Login Page -->
+    <div id="login-page">
+        <div class="login-card">
+            <div class="login-title">
+                <i class="fa-solid fa-gear" style="color: var(--primary-color); margin-right: 8px;"></i>
+                物联数智化赋能平台
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="password" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-full" style="font-size: 16px; height: 40px;">登 录</button>
+            </form>
+            <div class="login-footer">
+                <div>© 2026 物联数智化赋能平台. All rights reserved.</div>
+                <div>技术支持：XXX团队</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Workspace Page -->
+    <div id="workspace-page" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <i class="fa-solid fa-gear logo-icon"></i>
+                <span class="header-title">物联数智化赋能</span>
+                
+                <nav class="top-nav" id="topNav">
+                    <div class="nav-item active" data-menu="workbench">工作台</div>
+                    <div class="nav-item" data-menu="app">应用管理</div>
+                    <div class="nav-item" data-menu="enterprise">企业管理</div>
+                    <div class="nav-item" data-menu="system">系统管理</div>
+                </nav>
+            </div>
+
+            <div class="header-right">
+                <div class="user-avatar" id="userAvatar">管</div>
+                <!-- User Dropdown (Hidden by default) -->
+                <div class="user-dropdown hidden" id="userDropdown">
+                    <div class="dropdown-item" id="btnAccountInfo"><i class="fa-regular fa-id-card"></i> 账号信息</div>
+                    <div class="dropdown-item" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> 登出</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <!-- Content injected by JS based on active top menu -->
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area" id="contentArea">
+                <div class="content-placeholder">
+                    <i class="fa-regular fa-folder-open" style="font-size: 48px;"></i>
+                    <span>请选择左侧菜单查看内容</span>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 3. Account Drawer (Right Slide) -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="drawer" id="accountDrawer">
+        <div class="drawer-header">
+            <span class="drawer-title">账号设置</span>
+            <i class="fa-solid fa-xmark close-btn" id="closeDrawer"></i>
+        </div>
+        <div class="drawer-content">
+            
+            <!-- Personal Info View -->
+            <div class="info-block" id="infoViewBlock">
+                <div class="info-header">
+                    <span>个人信息</span>
+                </div>
+                <div class="info-body">
+                    <div class="info-row"><span class="info-label">账号名称</span><span class="info-value" id="view-username">admin</span></div>
+                    <div class="info-row"><span class="info-label">昵称</span><span class="info-value" id="view-nickname">管理员</span></div>
+                    <div class="info-row"><span class="info-label">电话</span><span class="info-value" id="view-phone">13800138000</span></div>
+                    <div class="info-row"><span class="info-label">邮箱</span><span class="info-value" id="view-email">admin@example.com</span></div>
+                    <div class="info-row"><span class="info-label">角色</span><span class="info-value">超级管理员</span></div>
+                    <div class="info-row"><span class="info-label">所属组织</span><span class="info-value">总部</span></div>
+                    <div class="info-row"><span class="info-label">创建日期</span><span class="info-value">2026-01-01</span></div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="btnEditProfile">编辑资料</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Info Edit -->
+            <div class="info-block hidden" id="infoEditBlock">
+                <div class="info-header">
+                    <span>编辑资料</span>
+                </div>
+                <div class="info-body">
+                    <div class="form-row">
+                        <label>昵称</label>
+                        <input type="text" id="edit-nickname" value="管理员">
+                    </div>
+                    <div class="form-row">
+                        <label>电话</label>
+                        <input type="text" id="edit-phone" value="13800138000">
+                    </div>
+                    <div class="form-row">
+                        <label>邮箱</label>
+                        <input type="email" id="edit-email" value="admin@example.com">
+                    </div>
+                    <div class="info-row" style="margin-top: 10px; color: #999; font-size: 12px;">
+                        <span class="info-label">账号名称</span><span>admin (只读)</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn" id="btnCancelEdit">取消</button>
+                        <button class="btn btn-primary" id="btnSaveProfile">保存</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password -->
+            <div class="info-block">
+                <div class="info-header">
+                    <span>安全设置</span>
+                </div>
+                <div class="info-body">
+                    <button class="btn w-full" id="btnTogglePassword">修改密码</button>
+                    
+                    <div class="password-form hidden" id="passwordForm">
+                        <div class="form-row">
+                            <label>原密码</label>
+                            <input type="password" placeholder="请输入原密码">
+                        </div>
+                        <div class="form-row">
+                            <label>新密码</label>
+                            <input type="password" placeholder="请输入新密码">
+                        </div>
+                        <div class="form-row">
+                            <label>确认新密码</label>
+                            <input type="password" placeholder="请再次输入新密码">
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="btnConfirmPassword">确认修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Application Logic
+         * No frameworks, pure Vanilla JS
+         */
+
+        // --- State Management ---
+        const state = {
+            activeTopMenu: 'workbench',
+            activeSidebarItem: null,
+            user: {
+                username: 'admin',
+                nickname: '管理员',
+                phone: '13800138000',
+                email: 'admin@example.com'
+            }
+        };
+
+        // --- Menu Configuration ---
+        const menuConfig = {
+            workbench: {
+                items: ['我的消息', '我的待办', '我的发起', '我的看板', '我的应用'],
+                default: '我的消息'
+            },
+            app: {
+                items: [], // No sidebar
+                default: null
+            },
+            enterprise: {
+                items: ['组织机构', '用户管理', '权限管理', '操作日志'],
+                default: '组织机构'
+            },
+            system: {
+                items: ['字典管理', '菜单管理'],
+                default: '字典管理'
+            }
+        };
+
+        // --- DOM Elements ---
+        const loginPage = document.getElementById('login-page');
+        const workspacePage = document.getElementById('workspace-page');
+        const loginForm = document.getElementById('loginForm');
+        
+        const topNav = document.getElementById('topNav');
+        const sidebar = document.getElementById('sidebar');
+        const contentArea = document.getElementById('contentArea');
+        
+        const userAvatar = document.getElementById('userAvatar');
+        const userDropdown = document.getElementById('userDropdown');
+        const btnLogout = document.getElementById('btnLogout');
+        const btnAccountInfo = document.getElementById('btnAccountInfo');
+
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const accountDrawer = document.getElementById('accountDrawer');
+        const closeDrawer = document.getElementById('closeDrawer');
+
+        // Edit Profile Elements
+        const btnEditProfile = document.getElementById('btnEditProfile');
+        const btnCancelEdit = document.getElementById('btnCancelEdit');
+        const btnSaveProfile = document.getElementById('btnSaveProfile');
+        const infoViewBlock = document.getElementById('infoViewBlock');
+        const infoEditBlock = document.getElementById('infoEditBlock');
+
+        // Password Elements
+        const btnTogglePassword = document.getElementById('btnTogglePassword');
+        const passwordForm = document.getElementById('passwordForm');
+        const btnConfirmPassword = document.getElementById('btnConfirmPassword');
+
+        // Toast
+        const toast = document.getElementById('toast');
+
+        // --- Helper Functions ---
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        function switchView(view) {
+            if (view === 'login') {
+                loginPage.classList.remove('hidden');
+                workspacePage.classList.add('hidden');
+            } else {
+                loginPage.classList.add('hidden');
+                workspacePage.classList.remove('hidden');
+            }
+        }
+
+        function renderSidebar() {
+            const config = menuConfig[state.activeTopMenu];
+            sidebar.innerHTML = '';
+
+            if (!config || !config.items || config.items.length === 0) {
+                // No sidebar for App Management
+                contentArea.innerHTML = `
+                    <div class="content-placeholder">
+                        <i class="fa-solid fa-layer-group" style="font-size: 48px; color: var(--primary-color);"></i>
+                        <span>${getMenuTitle(state.activeTopMenu)} - 待上线</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render Sidebar Items
+            config.items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `sidebar-item ${item === state.activeSidebarItem ? 'active' : ''}`;
+                div.innerHTML = `<span>${item}</span>`;
+                div.onclick = () => {
+                    state.activeSidebarItem = item;
+                    renderSidebar(); // Re-render to update active class
+                    renderContent(item);
+                };
+                sidebar.appendChild(div);
+            });
+
+            // If no active item, set default
+            if (!state.activeSidebarItem || !config.items.includes(state.activeSidebarItem)) {
+                state.activeSidebarItem = config.default;
+                // Update UI immediately if needed, but recursive call handles it
+                if (state.activeSidebarItem) {
+                    const activeDiv = sidebar.querySelector('.sidebar-item');
+                    if(activeDiv) activeDiv.classList.add('active');
+                }
+            }
+            
+            renderContent(state.activeSidebarItem);
+        }
+
+        function renderContent(itemName) {
+            if (!itemName) return;
+            contentArea.innerHTML = `
+                <div class="content-placeholder">
+                    <i class="fa-regular fa-file-lines" style="font-size: 48px; color: var(--secondary-color);"></i>
+                    <h2>${itemName}</h2>
+                    <p>功能模块正在开发中，敬请期待...</p>
+                </div>
+            `;
+        }
+
+        function getMenuTitle(key) {
+            const map = {
+                'workbench': '工作台',
+                'app': '应用管理',
+                'enterprise': '企业管理',
+                'system': '系统管理'
+            };
+            return map[key] || key;
+        }
+
+        // --- Event Handlers ---
+
+        // 1. Login
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username.trim() && password.trim()) {
+                // Login Success
+                state.user.username = username;
+                // Update Avatar Initial
+                userAvatar.textContent = username.charAt(0).toUpperCase();
+                switchView('workspace');
+                // Reset Top Menu to default
+                handleTopMenuClick('workbench');
+            } else {
+                alert('请输入用户名和密码');
+            }
+        });
+
+        // 2. Top Menu Switching
+        topNav.addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-item')) {
+                const menuKey = e.target.dataset.menu;
+                handleTopMenuClick(menuKey);
+            }
+        });
+
+        function handleTopMenuClick(menuKey) {
+            // Update UI
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.menu === menuKey) el.classList.add('active');
+            });
+
+            // Update State
+            state.activeTopMenu = menuKey;
+            state.activeSidebarItem = null; // Reset sidebar selection
+
+            // Render
+            renderSidebar();
+        }
+
+        // 3. User Dropdown
+        userAvatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userDropdown.contains(e.target) && e.target !== userAvatar) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+
+        // Logout
+        btnLogout.addEventListener('click', () => {
+            userDropdown.classList.add('hidden');
+            switchView('login');
+            loginForm.reset();
+            showToast('已安全退出');
+        });
+
+        // Open Account Drawer
+        btnAccountInfo.addEventListener('click', () => {
+            userDropdown.classList.add('hidden');
+            openDrawer();
+        });
+
+        // 4. Drawer Logic
+        function openDrawer() {
+            drawerOverlay.classList.add('open');
+            accountDrawer.classList.add('open');
+            // Reset to view mode
+            showViewMode();
+        }
+
+        function closeDrawerFunc() {
+            drawerOverlay.classList.remove('open');
+            accountDrawer.classList.remove('open');
+        }
+
+        closeDrawer.addEventListener('click', closeDrawerFunc);
+        drawerOverlay.addEventListener('click', closeDrawerFunc);
+
+        // 5. Profile Editing
+        btnEditProfile.addEventListener('click', () => {
+            showEditMode();
+        });
+
+        btnCancelEdit.addEventListener('click', () => {
+            showViewMode();
+        });
+
+        btnSaveProfile.addEventListener('click', () => {
+            // Update State
+            state.user.nickname = document.getElementById('edit-nickname').value;
+            state.user.phone = document.getElementById('edit-phone').value;
+            state.user.email = document.getElementById('edit-email').value;
+
+            // Update View UI
+            document.getElementById('view-nickname').textContent = state.user.nickname;
+            document.getElementById('view-phone').textContent = state.user.phone;
+            document.getElementById('view-email').textContent = state.user.email;
+
+            showViewMode();
+            showToast('个人信息已更新');
+        });
+
+        function showEditMode() {
+            // Pre-fill inputs
+            document.getElementById('edit-nickname').value = state.user.nickname;
+            document.getElementById('edit-phone').value = state.user.phone;
+            document.getElementById('edit-email').value = state.user.email;
+
+            infoViewBlock.classList.add('hidden');
+            infoEditBlock.classList.remove('hidden');
+        }
+
+        function showViewMode() {
+            infoEditBlock.classList.add('hidden');
+            infoViewBlock.classList.remove('hidden');
+        }
+
+        // 6. Password Change
+        btnTogglePassword.addEventListener('click', () => {
+            passwordForm.classList.toggle('hidden');
+        });
+
+        btnConfirmPassword.addEventListener('click', () => {
+            // Simulate logic
+            const inputs = passwordForm.querySelectorAll('input');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.value.trim()) valid = false;
+            });
+
+            if (valid) {
+                showToast('密码修改成功');
+                inputs.forEach(input => input.value = '');
+                passwordForm.classList.add('hidden');
+            } else {
+                alert('请填写所有字段');
+            }
+        });
+
+    </script>
+</body>
+</html>
